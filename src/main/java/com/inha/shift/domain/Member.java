@@ -13,14 +13,11 @@ public class Member {
     @Column(name = "mem_sq")
     private Long memSq;
 
-    @Column(name = "login_id", nullable = false)
-    private String loginId;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "login_pwd", nullable = false)
     private String loginPwd;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
@@ -30,7 +27,8 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private Role role = Role.MEMBER;
 
-    private char memDelYn;
+    private char memDelYn = 'n';
+
 }
