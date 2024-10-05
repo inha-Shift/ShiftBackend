@@ -7,11 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanRegister {
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
