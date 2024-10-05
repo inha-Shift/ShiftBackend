@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class MemberInfoDto {
     private Long memSq;
-    private String loginId;
+    private String email;
     private Role role;
 }

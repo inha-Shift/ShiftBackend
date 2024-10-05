@@ -19,13 +19,13 @@ class MemberServiceTest {
     public void signUp() throws Exception {
         //given
         Member member = new Member();
-        member.setLoginId("rnjsdndud00");
+        member.setEmail("rnjsdndud00");
 
         //when
         Long saveMemId = memberService.signUp(member);
         Member findMember = memberService.findMemberById(saveMemId);
 
         //then
-        assertEquals(member.getLoginId(), findMember.getLoginId());
+        assertEquals(member.getEmail(), findMember.getEmail());
     }
 }

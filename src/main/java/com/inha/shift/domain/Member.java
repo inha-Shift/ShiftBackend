@@ -16,8 +16,8 @@ public class Member {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "login_pwd", nullable = false)
-    private String loginPwd;
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
