@@ -9,5 +9,4 @@ class ShiftApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
