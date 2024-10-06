@@ -27,7 +27,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role = Role.MEMBER;
+    private Role role = Role.USER;
 
     private char memDelYn = 'n';
 
