@@ -27,29 +27,31 @@ public class MemberService {
 
     /**
      * 회원가입
-     * @param member
+     * @param memberDto
      * @return Member Id
      */
     @Transactional
-    public Long signUp(Member member) {
-        if(memberRepository.existsByEmail(member.getEmail()) || memberRepository.existsByStdntNum(member.getStdntNum())) {
-            return 0L;
-        }
+    public Long signUp(MemberInfoDto memberDto) {
         // 비밀번호 암호화
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+
+        if(memberRepository.existsByEmail(memberDto.getEmail()) || memberRepository.existsByStdntNum(memberDto.getStdntNum())) {
+            return null;
+        }
+        Member member = modelMapper.map(memberDto, Member.class);
         Member saveMember = memberRepository.save(member);
         return saveMember.getMemSq();
     }
 
     /**
      * 로그인
-     * @param dto
+     * @param loginRequestDto
      * @return Access Token
      */
     @Transactional
-    public String signIn(LoginRequestDto dto) {
-        String email = dto.getEmail();
-        String password = dto.getPassword();
+    public String signIn(LoginRequestDto loginRequestDto) {
+        String email = loginRequestDto.getEmail();
+        String password = loginRequestDto.getPassword();
         Member member = memberRepository.findMemberByEmail(email);
         if(member == null) {
             throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
@@ -57,9 +59,8 @@ public class MemberService {
         if(!passwordEncoder.matches(password, member.getPassword())){
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
-        MemberInfoDto info = modelMapper.map(member, MemberInfoDto.class);
-
-        return jwtUtil.createAccessToken(info);
+        MemberInfoDto infoDto = modelMapper.map(member, MemberInfoDto.class);
+        return jwtUtil.createAccessToken(infoDto);
     }
 
     public Member findMemberById(Long id) {
