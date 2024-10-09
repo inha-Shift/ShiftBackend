@@ -41,7 +41,7 @@ public class JwtUtil {
      */
     private String createToken(MemberInfoDto member, long expireTime) {
         Claims claims = Jwts.claims();
-        claims.put("memberId", member.getMemSq());
+        claims.put("memberSq", member.getMemSq());
         claims.put("role", member.getRole());
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -59,12 +59,12 @@ public class JwtUtil {
     }
 
     /**
-     * Token에서 User Id 가져오기
+     * Token에서 MemberSq 가져오기
      * @param token
-     * @return Member Id
+     * @return MemberSq
      */
-    public Long getUserIdFromToken(String token) {
-        return parseClaims(token).get("memberId", Long.class);
+    public Long getMemberSqFromToken(String token) {
+        return parseClaims(token).get("memberSq", Long.class);
     }
 
 
