@@ -3,7 +3,8 @@ package com.inha.shift.service;
 import com.inha.shift.domain.Member;
 import com.inha.shift.dto.LoginRequestDto;
 import com.inha.shift.dto.MemberInfoDto;
-import com.inha.shift.jwt.JwtUtil;
+import com.inha.shift.enums.Role;
+import com.inha.shift.sercurity.jwt.JwtUtil;
 import com.inha.shift.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,17 +29,17 @@ public class MemberService {
     /**
      * 회원가입
      * @param memberDto
-     * @return Member Id
+     * @return MemberSq
      */
     @Transactional
     public Long signUp(MemberInfoDto memberDto) {
         // 비밀번호 암호화
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-
         if(memberRepository.existsByEmail(memberDto.getEmail()) || memberRepository.existsByStdntNum(memberDto.getStdntNum())) {
             return null;
         }
         Member member = modelMapper.map(memberDto, Member.class);
+        member.setRole(Role.USER);
         Member saveMember = memberRepository.save(member);
         return saveMember.getMemSq();
     }

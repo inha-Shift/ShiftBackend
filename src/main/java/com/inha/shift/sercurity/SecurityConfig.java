@@ -1,9 +1,7 @@
-package com.inha.shift.config;
+package com.inha.shift.sercurity;
 
-import com.inha.shift.jwt.JwtAuthFilter;
-import com.inha.shift.jwt.JwtUtil;
-import com.inha.shift.service.CustomUserDetailService;
-import lombok.AllArgsConstructor;
+import com.inha.shift.sercurity.jwt.JwtAuthFilter;
+import com.inha.shift.sercurity.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,15 +10,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -37,13 +33,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .formLogin(formLogin -> formLogin.loginProcessingUrl("/api/auth/signIn").permitAll())
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/signIn", "/auth/signUp").permitAll()
+                        .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception ->
+                        exception
+                                // 허용되지 않은 요청이면 로그인 페이지로 리다이렉트
+                                .authenticationEntryPoint((request, response, authException) -> {
+                                    response.sendRedirect("/auth/signIn");
+                                }))
+                .logout(LogoutConfigurer::permitAll)
                 // 세션 생성 or 사용 X
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))

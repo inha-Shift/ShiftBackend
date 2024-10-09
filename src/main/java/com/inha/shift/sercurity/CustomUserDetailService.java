@@ -1,6 +1,5 @@
-package com.inha.shift.service;
+package com.inha.shift.sercurity;
 
-import com.inha.shift.sercurity.CustomUserDetails;
 import com.inha.shift.domain.Member;
 import com.inha.shift.dto.MemberInfoDto;
 import com.inha.shift.repository.MemberRepository;

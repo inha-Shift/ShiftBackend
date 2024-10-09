@@ -1,4 +1,4 @@
-package com.inha.shift.jwt;
+package com.inha.shift.sercurity.jwt;
 
 import com.inha.shift.dto.MemberInfoDto;
 import io.jsonwebtoken.*;

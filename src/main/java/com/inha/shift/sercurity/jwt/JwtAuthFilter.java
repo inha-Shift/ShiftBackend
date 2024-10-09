@@ -1,6 +1,6 @@
-package com.inha.shift.jwt;
+package com.inha.shift.sercurity.jwt;
 
-import com.inha.shift.service.CustomUserDetailService;
+import com.inha.shift.sercurity.CustomUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter { // OncePerRequestFilte
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("authHeader: " + authHeader);
 
         // HTTP 요청에 들어있는 Authorization은 Bearer로 시작한다.
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

@@ -1,4 +1,4 @@
-package com.inha.shift.domain;
+package com.inha.shift.sercurity;
 
 import com.inha.shift.dto.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
