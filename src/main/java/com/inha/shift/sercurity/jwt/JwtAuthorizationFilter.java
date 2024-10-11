@@ -27,7 +27,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerReq
     // 각 HTTP 요청마다 실행, JWT 토큰 검증 and 사용자 인증
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(request.getRequestURI());
         String authHeader = request.getHeader("Authorization");
 
         // HTTP 요청에 들어있는 Authorization은 Bearer로 시작한다.
