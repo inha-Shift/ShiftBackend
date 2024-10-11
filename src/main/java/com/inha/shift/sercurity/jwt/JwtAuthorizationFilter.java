@@ -28,7 +28,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerReq
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-
         // HTTP 요청에 들어있는 Authorization은 Bearer로 시작한다.
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             // HTTP 요청에 들어있는 토큰 가져오기

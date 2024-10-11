@@ -19,7 +19,7 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nickname", length = 10, nullable = false)
+    @Column(name = "nickname", length = 10, nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String nickname;
 
     @Column(name = "stdnt_num", nullable = false)

@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        // signIn으로 들어오는 요청에만 JwtAuthenticationFilter를 호출
         setFilterProcessesUrl("/auth/signIn");
     }
 
