@@ -1,8 +1,10 @@
 package com.inha.shift.sercurity;
 
-import com.inha.shift.sercurity.jwt.JwtAuthFilter;
+import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
+import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +27,8 @@ public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
 
+
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -38,7 +42,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/signIn", "/auth/signUp").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -46,14 +50,17 @@ public class SecurityConfig {
                         exception
                                 // 허용되지 않은 요청이면 로그인 페이지로 리다이렉트
                                 .authenticationEntryPoint((request, response, authException) -> {
-                                    response.sendRedirect("/auth/signIn");
+                                    response.sendRedirect("/auth/sign");
                                 }))
                 .logout(LogoutConfigurer::permitAll)
                 // 세션 생성 or 사용 X
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
 
-                .addFilterBefore(new JwtAuthFilter(customUserDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthorizationFilter(customUserDetailService, jwtUtil), JwtAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(
+                        jwtUtil, authenticationConfiguration.getAuthenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

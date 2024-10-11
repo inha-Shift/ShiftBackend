@@ -5,7 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,17 +14,22 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
-public class JwtAuthFilter extends OncePerRequestFilter { // OncePerRequestFilter: 한 번 실행 보장
+@Slf4j
+public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerRequestFilter: 한 번 실행 보장
 
     private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
 
+    public JwtAuthorizationFilter(CustomUserDetailService customUserDetailService, JwtUtil jwtUtil) {
+        this.customUserDetailService = customUserDetailService;
+        this.jwtUtil = jwtUtil;
+    }
+
     // 각 HTTP 요청마다 실행, JWT 토큰 검증 and 사용자 인증
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(request.getRequestURI());
         String authHeader = request.getHeader("Authorization");
-        System.out.println("authHeader: " + authHeader);
 
         // HTTP 요청에 들어있는 Authorization은 Bearer로 시작한다.
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

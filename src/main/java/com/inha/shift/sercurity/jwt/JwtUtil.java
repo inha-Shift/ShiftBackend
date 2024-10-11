@@ -4,8 +4,11 @@ import com.inha.shift.dto.MemberInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -100,5 +103,18 @@ public class JwtUtil {
         } catch (ExpiredJwtException e){
             return e.getClaims();
         }
+    }
+
+    public void addJwtToCookie(String token, HttpServletResponse response) {
+        // 쿠키 생성
+        ResponseCookie cookie = ResponseCookie.from("token", token) // 쿠키 이름과 값 설정
+                .httpOnly(true) // 클라이언트 측에서 JavaScript 접근 불가
+                .secure(true) // HTTPS에서만 쿠키 전송
+                .path("/") // 모든 경로에서 쿠키 접근 가능
+                .sameSite("Strict") // SameSite 속성 설정 (Strict, Lax, None)
+                .maxAge(accessTokenExptime) // 쿠키 만료 시간 설정 (초 단위)
+                .build();
+        // 쿠키에 Token 추가
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

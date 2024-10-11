@@ -20,19 +20,19 @@ public class MemberController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/auth/signIn")
-    public void login(@RequestBody LoginRequestDto loginMemberDto, HttpServletResponse response) {
-        String jwtToken = memberService.signIn(loginMemberDto);
-        System.out.println("jwtToken: " + jwtToken);
-        ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("Strict") // Strict, Lax, None
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-    }
+//    @PostMapping("/auth/signIn")
+//    public void login(@RequestBody LoginRequestDto loginMemberDto, HttpServletResponse response) {
+//        String jwtToken = memberService.signIn(loginMemberDto);
+//        System.out.println("jwtToken: " + jwtToken);
+//        ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
+//                .httpOnly(true)
+//                .secure(true)
+//                .path("/")
+//                .sameSite("Strict") // Strict, Lax, None
+//                .build();
+//
+//        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+//    }
 
     @PostMapping("/auth/signUp")
     public ResponseEntity<String> signUp(@RequestBody MemberInfoDto memberDto) {
