@@ -3,6 +3,7 @@ package com.inha.shift.sercurity;
 import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
 import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -48,9 +49,9 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception ->
                         exception
-                                // 허용되지 않은 요청이면 로그인 페이지로 리다이렉트
+                                // 허용되지 않은 요청이면 401 리턴
                                 .authenticationEntryPoint((request, response, authException) -> {
-                                    response.sendRedirect("/auth/sign");
+                                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Required");
                                 }))
                 .logout(LogoutConfigurer::permitAll)
                 // 세션 생성 or 사용 X

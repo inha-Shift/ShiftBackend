@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,10 +37,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // OncePerReq
 
             // 유효성 검증 (Signature 확인, Expire Time 확인)
             if (jwtUtil.validateToken(token)) {
-                Long memberSq = jwtUtil.getMemberSqFromToken(token);
+                String email = jwtUtil.getEmailFromToken(token);
 
                 // 현재 사용자 객체 생성
-                UserDetails userDetails = customUserDetailService.loadUserByUsername(memberSq.toString());
+                UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 
                 // 사용자 인증 정보 생성
                 if(userDetails != null) {

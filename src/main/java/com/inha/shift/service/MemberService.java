@@ -44,26 +44,6 @@ public class MemberService {
         return saveMember.getMemSq();
     }
 
-    /**
-     * 로그인
-     * @param loginRequestDto
-     * @return Access Token
-     */
-    @Transactional
-    public String signIn(LoginRequestDto loginRequestDto) {
-        String email = loginRequestDto.getEmail();
-        String password = loginRequestDto.getPassword();
-        Member member = memberRepository.findMemberByEmail(email);
-        if(member == null) {
-            throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
-        }
-        if(!passwordEncoder.matches(password, member.getPassword())){
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-        }
-        MemberInfoDto infoDto = modelMapper.map(member, MemberInfoDto.class);
-        return jwtUtil.createAccessToken(infoDto);
-    }
-
     public Member findMemberById(Long id) {
         Optional<Member> findMember = memberRepository.findMemberByMemSq(id);
         if(findMember.isPresent()) {

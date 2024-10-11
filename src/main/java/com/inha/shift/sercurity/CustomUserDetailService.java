@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
@@ -18,10 +20,13 @@ public class CustomUserDetailService implements UserDetailsService {
 
     // JWT 토큰에서 추출한 PK와 일치하는 데이터가 존재하면 Auth 객체 생성 시 필요한 UserDetail 객체로 반환한다.
     @Override
-    public UserDetails loadUserByUsername(String memberSq) throws UsernameNotFoundException {
-        Member member = memberRepository.findMemberByMemSq(Long.parseLong(memberSq))
-                .orElseThrow(() -> new UsernameNotFoundException(memberSq + "에 해당하는 회원이 없습니다."));
-        MemberInfoDto dto = modelMapper.map(member, MemberInfoDto.class);
-        return new CustomUserDetails(dto);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            return new CustomUserDetails(modelMapper.map(member, MemberInfoDto.class));
+        } else {
+            throw new UsernameNotFoundException(email);
+        }
     }
 }

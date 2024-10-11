@@ -70,6 +70,15 @@ public class JwtUtil {
         return parseClaims(token).get("memberSq", Long.class);
     }
 
+    /**
+     * Token에서 Email 가져오기
+     * @param token
+     * @return
+     */
+    public String getEmailFromToken(String token) {
+        return parseClaims(token).get("email", String.class);
+    }
+
 
     /**
      * JWT 검증
@@ -108,11 +117,11 @@ public class JwtUtil {
     public void addJwtToCookie(String token, HttpServletResponse response) {
         // 쿠키 생성
         ResponseCookie cookie = ResponseCookie.from("token", token) // 쿠키 이름과 값 설정
-                .httpOnly(true) // 클라이언트 측에서 JavaScript 접근 불가
-                .secure(true) // HTTPS에서만 쿠키 전송
+                .httpOnly(true) // 클라이언트에서 접근 불가
+                .secure(false) // HTTPS에서만 쿠키 전송, 개발 단계에서는 비활성화
                 .path("/") // 모든 경로에서 쿠키 접근 가능
-                .sameSite("Strict") // SameSite 속성 설정 (Strict, Lax, None)
-                .maxAge(accessTokenExptime) // 쿠키 만료 시간 설정 (초 단위)
+                .sameSite("Strict") // 같은 사이트에서만 전송
+                .maxAge(accessTokenExptime) // 쿠키 만료 시간
                 .build();
         // 쿠키에 Token 추가
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

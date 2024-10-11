@@ -55,7 +55,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         MemberInfoDto memberDto = ((CustomUserDetails) authResult.getPrincipal()).memberDto();
         String token = jwtUtil.createAccessToken(memberDto);
         jwtUtil.addJwtToCookie(token, response);
-        super.successfulAuthentication(request, response, chain, authResult);
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // 로그인 실패
