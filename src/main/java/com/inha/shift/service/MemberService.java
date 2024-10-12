@@ -3,7 +3,8 @@ package com.inha.shift.service;
 import com.inha.shift.domain.Member;
 import com.inha.shift.dto.LoginRequestDto;
 import com.inha.shift.dto.MemberInfoDto;
-import com.inha.shift.jwt.JwtUtil;
+import com.inha.shift.enums.Role;
+import com.inha.shift.sercurity.jwt.JwtUtil;
 import com.inha.shift.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,39 +28,20 @@ public class MemberService {
 
     /**
      * 회원가입
-     * @param member
-     * @return Member Id
+     * @param memberDto
+     * @return MemberSq
      */
     @Transactional
-    public Long signUp(Member member) {
-        if(memberRepository.existsByEmail(member.getEmail()) || memberRepository.existsByStdntNum(member.getStdntNum())) {
-            return 0L;
-        }
+    public Long signUp(MemberInfoDto memberDto) {
         // 비밀번호 암호화
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+        if(memberRepository.existsByEmail(memberDto.getEmail()) || memberRepository.existsByStdntNum(memberDto.getStdntNum())) {
+            return null;
+        }
+        Member member = modelMapper.map(memberDto, Member.class);
+        member.setRole(Role.USER);
         Member saveMember = memberRepository.save(member);
         return saveMember.getMemSq();
-    }
-
-    /**
-     * 로그인
-     * @param dto
-     * @return Access Token
-     */
-    @Transactional
-    public String signIn(LoginRequestDto dto) {
-        String email = dto.getEmail();
-        String password = dto.getPassword();
-        Member member = memberRepository.findMemberByEmail(email);
-        if(member == null) {
-            throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
-        }
-        if(!passwordEncoder.matches(password, member.getPassword())){
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-        }
-        MemberInfoDto info = modelMapper.map(member, MemberInfoDto.class);
-
-        return jwtUtil.createAccessToken(info);
     }
 
     public Member findMemberById(Long id) {

@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/shiftdatabase
+    username: admin
+    password: shift11!!
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+jwt:
+  expiration_time: 86400000 # 1일
+  secret: 66eQ7LqJ64+E66eI67GA7LKt7YyM7IaM64KY7YOA7IqI7Y287KCc64SI65+0 # 말캉도마뱀청파소나타슈퍼제너럴

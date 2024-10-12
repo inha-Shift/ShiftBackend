@@ -1,11 +1,14 @@
-package com.inha.shift.jwt;
+package com.inha.shift.sercurity.jwt;
 
 import com.inha.shift.dto.MemberInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -41,7 +44,7 @@ public class JwtUtil {
      */
     private String createToken(MemberInfoDto member, long expireTime) {
         Claims claims = Jwts.claims();
-        claims.put("memberId", member.getMemSq());
+        claims.put("memberSq", member.getMemSq());
         claims.put("role", member.getRole());
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -59,12 +62,21 @@ public class JwtUtil {
     }
 
     /**
-     * Token에서 User Id 가져오기
+     * Token에서 MemberSq 가져오기
      * @param token
-     * @return Member Id
+     * @return MemberSq
      */
-    public Long getUserIdFromToken(String token) {
-        return parseClaims(token).get("memberId", Long.class);
+    public Long getMemberSqFromToken(String token) {
+        return parseClaims(token).get("memberSq", Long.class);
+    }
+
+    /**
+     * Token에서 Email 가져오기
+     * @param token
+     * @return
+     */
+    public String getEmailFromToken(String token) {
+        return parseClaims(token).get("email", String.class);
     }
 
 
@@ -100,5 +112,18 @@ public class JwtUtil {
         } catch (ExpiredJwtException e){
             return e.getClaims();
         }
+    }
+
+    public void addJwtToCookie(String token, HttpServletResponse response) {
+        // 쿠키 생성
+        ResponseCookie cookie = ResponseCookie.from("token", token) // 쿠키 이름과 값 설정
+                .httpOnly(true) // 클라이언트에서 접근 불가
+                .secure(false) // HTTPS에서만 쿠키 전송, 개발 단계에서는 비활성화
+                .path("/") // 모든 경로에서 쿠키 접근 가능
+                .sameSite("Strict") // 같은 사이트에서만 전송
+                .maxAge(accessTokenExptime) // 쿠키 만료 시간
+                .build();
+        // 쿠키에 Token 추가
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

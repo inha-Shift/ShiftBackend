@@ -1,8 +1,9 @@
 package com.inha.shift.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class LoginRequestDto {
     private String email;
     private String password;
