@@ -1,11 +1,14 @@
 package com.inha.shift.sercurity;
 
+import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.eventHandler.MyAuthenticationFailureHandler;
+import com.inha.shift.eventHandler.MyAuthenticationSuccessHandler;
 import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
 import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
+import com.inha.shift.service.CustomOAuth2Service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +19,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -26,6 +31,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+    private final CustomOAuth2Service oAuth2UserService;
+    private final MyAuthenticationSuccessHandler successHandler;
+    private final MyAuthenticationFailureHandler failureHandler;
     private final JwtUtil jwtUtil;
 
 
@@ -46,6 +54,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp", "/auth/sendEmailConfirmNum", "/auth/confirmEmail").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/confirmAuth").permitAll()
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(c -> c.userService(oAuth2UserService))
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
                 )
                 .exceptionHandling(exception ->
                         exception

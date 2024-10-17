@@ -27,7 +27,7 @@ class MemberServiceTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto();
         memberInfoDto.setEmail("rnjsdndud00");
         memberInfoDto.setPassword("1234");
-        memberInfoDto.setRole(Role.MEMBER);
+        memberInfoDto.setRole(Role.USER);
         memberInfoDto.setNickname("말캉도마뱀");
         memberInfoDto.setStdntNum(1223401);
 
@@ -45,7 +45,7 @@ class MemberServiceTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto();
         memberInfoDto.setEmail("rnjsdndud00");
         memberInfoDto.setPassword("1234");
-        memberInfoDto.setRole(Role.MEMBER);
+        memberInfoDto.setRole(Role.USER);
         memberInfoDto.setNickname("말캉도마뱀");
         memberInfoDto.setStdntNum(1223401);
         Long saveMemId = memberService.signUp(memberInfoDto);
