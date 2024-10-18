@@ -1,11 +1,14 @@
 package com.inha.shift.sercurity;
 
+import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.eventHandler.MyAuthenticationFailureHandler;
+import com.inha.shift.eventHandler.MyAuthenticationSuccessHandler;
 import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
 import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
+import com.inha.shift.service.CustomOAuth2Service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,10 +25,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+    private final CustomOAuth2Service oAuth2UserService;
+    private final MyAuthenticationSuccessHandler successHandler;
+    private final MyAuthenticationFailureHandler failureHandler;
     private final JwtUtil jwtUtil;
 
 
@@ -46,6 +52,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp", "/auth/sendEmailConfirmNum", "/auth/confirmEmail").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/confirmAuth").permitAll()
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(c -> c.userService(oAuth2UserService))
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
                 )
                 .exceptionHandling(exception ->
                         exception
@@ -71,6 +82,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 origin 추가
+        config.addAllowedOrigin("http://localhost:8080"); // 허용할 origin 추가
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

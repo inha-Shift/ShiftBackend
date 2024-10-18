@@ -1,6 +1,7 @@
 package com.inha.shift.sercurity.jwt;
 
 import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,11 +31,17 @@ public class JwtUtil {
 
     /**
      * Access Token 생성
-     * @param member
+     * @param memberDto
      * @return Access Token String
      */
-    public String createAccessToken(MemberInfoDto member) {
-        return createToken(member, accessTokenExptime);
+    public String createAccessToken(MemberInfoDto memberDto) {
+        return createToken(memberDto, accessTokenExptime);
+    }
+
+    public String createOAuthToken(String email, String role) {
+        MemberInfoDto memberDto = new MemberInfoDto();
+        memberDto.setRole(Role.convertStringToRole(role));
+        return createToken(memberDto, accessTokenExptime);
     }
 
     /**
