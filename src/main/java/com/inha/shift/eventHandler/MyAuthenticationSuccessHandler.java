@@ -5,27 +5,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
 import lombok.extern.slf4j.Slf4j;
-=======
->>>>>>> 0d7b8bd45325d7f32c873532037df8b8d1a9b287
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-<<<<<<< HEAD
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-=======
-
-import java.io.IOException;
-
->>>>>>> 0d7b8bd45325d7f32c873532037df8b8d1a9b287
 @Component
 @RequiredArgsConstructor
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -61,7 +50,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             response.getWriter().write("{\"message\":\"Login successful\", \"token\":\"" + oAuthToken + "\"}");
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-<<<<<<< HEAD
             // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.
             String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/loginSuccess")
                     .queryParam("email", (String) oAuth2User.getAttribute("email"))
@@ -71,13 +59,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
                     .toUriString();
             // 회원가입 페이지로 리다이렉트 시킨다.
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
-=======
-            // 회원이 존재하지 않는 경우 401 Unauthorized 응답 반환
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"message\":\"Invalid credentials. User not found.\"}");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
->>>>>>> 0d7b8bd45325d7f32c873532037df8b8d1a9b287
         }
     }
 

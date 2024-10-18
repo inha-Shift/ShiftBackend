@@ -38,28 +38,4 @@ class MemberServiceTest {
         //then
         assertEquals(memberInfoDto.getEmail(), findMember.getEmail());
     }
-<<<<<<< HEAD
-=======
-
-    @Test
-    public void signIn() throws Exception {
-        // given
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setEmail("rnjsdndud00");
-        memberInfoDto.setPassword("1234");
-        memberInfoDto.setRole(Role.USER);
-        memberInfoDto.setNickname("말캉도마뱀");
-        memberInfoDto.setStdntNum(1223401);
-        Long saveMemId = memberService.signUp(memberInfoDto);
-
-        // when
-        LoginRequestDto loginRequestDto = new LoginRequestDto();
-        loginRequestDto.setEmail("rnjsdndud00");
-        loginRequestDto.setPassword("1234");
-        String token = memberService.signIn(loginRequestDto);
-
-        // then
-        System.out.println("token: " + token);
-    }
->>>>>>> 0d7b8bd45325d7f32c873532037df8b8d1a9b287
 }

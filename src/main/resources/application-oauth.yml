@@ -4,28 +4,29 @@ spring:
       client:
         registration:
           google:
-            client-id: {client-id}
-            client-secret: {client-secret}
+            client-id: 989794013336-vafucs5qkm9upl7eql8vg6nf5a7f07pk.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: "http://localhost:8080/login/oauth2/code/google"
             authorization-grant-type: authorization_code
             scope: email
 
           kakao:
-            client-id: {client-id(Rest Api key)}
+            client-id: 35a5b22062f8b173cc816d75e7d5ef0d
             redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
             client-authentication-method: POST
             authorization-grant-type: authorization_code
-            scope: profile_nickname, profile_image, account_email
+            scope: profile_nickname, account_email
 
           naver:
-            client-id: {client-id}
-            client-secret: {client-secret}
+            client-id: vmdbExq3M4w4rhfKpxN1
+            client-secret: kzyS5kkLys
             redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
             client-name: Naver
 
         provider:
+          # 구글의 경우 Spring Security OAuth2가 provider에 대한 정보를 가지고 있으므로 작성할 필요가 없다.
           kakao:
             authorization_uri: https://kauth.kakao.com/oauth/authorize
             token_uri: https://kauth.kakao.com/oauth/token
