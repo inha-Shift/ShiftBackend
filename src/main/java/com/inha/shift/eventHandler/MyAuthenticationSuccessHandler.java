@@ -45,10 +45,10 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             String oAuthToken = jwtUtil.createOAuthToken(email, role);
             jwtUtil.addJwtToCookie(oAuthToken, response);
 
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"message\":\"Login successful\", \"token\":\"" + oAuthToken + "\"}");
-            response.setStatus(HttpServletResponse.SC_OK);
+//            response.setContentType("application/json");
+//            response.setCharacterEncoding("UTF-8");
+//            response.getWriter().write("{\"message\":\"Login successful\", \"jwt\":\"" + oAuthToken + "\"}");
+//            response.setStatus(HttpServletResponse.SC_OK);
         } else {
             // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.
             String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/loginSuccess")
