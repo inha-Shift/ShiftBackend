@@ -1,6 +1,7 @@
 package com.inha.shift.sercurity.jwt;
 
 import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,11 +31,17 @@ public class JwtUtil {
 
     /**
      * Access Token 생성
-     * @param member
+     * @param memberDto
      * @return Access Token String
      */
-    public String createAccessToken(MemberInfoDto member) {
-        return createToken(member, accessTokenExptime);
+    public String createAccessToken(MemberInfoDto memberDto) {
+        return createToken(memberDto, accessTokenExptime);
+    }
+
+    public String createOAuthToken(String email, String role) {
+        MemberInfoDto memberDto = new MemberInfoDto();
+        memberDto.setRole(Role.convertStringToRole(role));
+        return createToken(memberDto, accessTokenExptime);
     }
 
     /**
@@ -45,6 +52,7 @@ public class JwtUtil {
     private String createToken(MemberInfoDto member, long expireTime) {
         Claims claims = Jwts.claims();
         claims.put("memberSq", member.getMemSq());
+        claims.put("email", member.getEmail());
         claims.put("role", member.getRole());
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -116,7 +124,7 @@ public class JwtUtil {
 
     public void addJwtToCookie(String token, HttpServletResponse response) {
         // 쿠키 생성
-        ResponseCookie cookie = ResponseCookie.from("token", token) // 쿠키 이름과 값 설정
+        ResponseCookie cookie = ResponseCookie.from("jwt", token) // 쿠키 이름과 값 설정
                 .httpOnly(true) // 클라이언트에서 접근 불가
                 .secure(false) // HTTPS에서만 쿠키 전송, 개발 단계에서는 비활성화
                 .path("/") // 모든 경로에서 쿠키 접근 가능

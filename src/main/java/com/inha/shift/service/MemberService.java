@@ -23,7 +23,6 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
     private final ModelMapper modelMapper;
 
     /**
@@ -36,7 +35,7 @@ public class MemberService {
         // 비밀번호 암호화
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         if(memberRepository.existsByEmail(memberDto.getEmail()) || memberRepository.existsByStdntNum(memberDto.getStdntNum())) {
-            return null;
+            throw new BadCredentialsException("Email already in use");
         }
         Member member = modelMapper.map(memberDto, Member.class);
         member.setRole(Role.USER);
@@ -51,5 +50,9 @@ public class MemberService {
         } else {
             throw new NoSuchElementException("Member not found");
         }
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findMemberByEmail(email);
     }
 }

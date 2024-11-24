@@ -31,16 +31,5 @@ public class Member {
 
     private char memDelYn = 'n';
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "memSq=" + memSq +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", stdntNum=" + stdntNum +
-                ", role=" + role +
-                ", memDelYn=" + memDelYn +
-                '}';
-    }
+
 }
