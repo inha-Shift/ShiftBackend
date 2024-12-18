@@ -1,4 +1,4 @@
-package com.inha.shift.domain;
+package com.inha.shift.sercurity.oauth;
 
 import lombok.AccessLevel;
 import lombok.Builder;

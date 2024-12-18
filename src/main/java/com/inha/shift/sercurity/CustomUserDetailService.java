@@ -1,7 +1,6 @@
 package com.inha.shift.sercurity;
 
 import com.inha.shift.domain.Member;
-import com.inha.shift.dto.MemberInfoDto;
 import com.inha.shift.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,7 +23,7 @@ public class CustomUserDetailService implements UserDetailsService {
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            return new CustomUserDetails(modelMapper.map(member, MemberInfoDto.class));
+            return new CustomUserDetails(member);
         } else {
             throw new UsernameNotFoundException(email);
         }

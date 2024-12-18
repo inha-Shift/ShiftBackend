@@ -1,8 +1,8 @@
 package com.inha.shift.sercurity.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inha.shift.domain.Member;
 import com.inha.shift.dto.LoginRequestDto;
-import com.inha.shift.dto.MemberInfoDto;
 import com.inha.shift.sercurity.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,8 +53,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("로그인 성공");
-        MemberInfoDto memberDto = ((CustomUserDetails) authResult.getPrincipal()).memberDto();
-        String token = jwtUtil.createAccessToken(memberDto);
+        Member member = ((CustomUserDetails) authResult.getPrincipal()).member();
+        String token = jwtUtil.createAccessToken(member);
         jwtUtil.addJwtToCookie(token, response);
 
         response.setStatus(HttpServletResponse.SC_OK);

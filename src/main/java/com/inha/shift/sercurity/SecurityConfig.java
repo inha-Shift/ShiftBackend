@@ -1,12 +1,11 @@
 package com.inha.shift.sercurity;
 
-import com.inha.shift.dto.MemberInfoDto;
-import com.inha.shift.eventHandler.MyAuthenticationFailureHandler;
-import com.inha.shift.eventHandler.MyAuthenticationSuccessHandler;
+import com.inha.shift.sercurity.oauth.eventHandler.MyAuthenticationFailureHandler;
+import com.inha.shift.sercurity.oauth.eventHandler.MyAuthenticationSuccessHandler;
 import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
 import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
-import com.inha.shift.service.CustomOAuth2Service;
+import com.inha.shift.sercurity.oauth.CustomOAuth2Service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

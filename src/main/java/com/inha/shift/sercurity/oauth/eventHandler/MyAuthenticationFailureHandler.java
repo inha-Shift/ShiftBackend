@@ -1,4 +1,4 @@
-package com.inha.shift.eventHandler;
+package com.inha.shift.sercurity.oauth.eventHandler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

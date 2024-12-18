@@ -1,8 +1,7 @@
 package com.inha.shift.service;
 
 import com.inha.shift.domain.Member;
-import com.inha.shift.dto.LoginRequestDto;
-import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.dto.SignUpDTO;
 import com.inha.shift.enums.Role;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -24,18 +23,18 @@ class MemberServiceTest {
     @Test
     public void signUp() throws Exception {
         //given
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setEmail("rnjsdndud00");
-        memberInfoDto.setPassword("1234");
-        memberInfoDto.setRole(Role.USER);
-        memberInfoDto.setNickname("말캉도마뱀");
-        memberInfoDto.setStdntNum(1223401);
+        SignUpDTO signUpDto = new SignUpDTO();
+        signUpDto.setEmail("rnjsdndud00");
+        signUpDto.setPassword("1234");
+        signUpDto.setRole(Role.USER);
+        signUpDto.setNickname("말캉도마뱀");
+        signUpDto.setStdntNum(1223401);
 
         //when
-        Long saveMemId = memberService.signUp(memberInfoDto);
+        Long saveMemId = memberService.signUp(signUpDto);
         Member findMember = memberService.findMemberById(saveMemId);
 
         //then
-        assertEquals(memberInfoDto.getEmail(), findMember.getEmail());
+        assertEquals(signUpDto.getEmail(), findMember.getEmail());
     }
 }

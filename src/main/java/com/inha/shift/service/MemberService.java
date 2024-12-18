@@ -1,15 +1,12 @@
 package com.inha.shift.service;
 
 import com.inha.shift.domain.Member;
-import com.inha.shift.dto.LoginRequestDto;
-import com.inha.shift.dto.MemberInfoDto;
+import com.inha.shift.dto.SignUpDTO;
 import com.inha.shift.enums.Role;
-import com.inha.shift.sercurity.jwt.JwtUtil;
 import com.inha.shift.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +28,7 @@ public class MemberService {
      * @return MemberSq
      */
     @Transactional
-    public Long signUp(MemberInfoDto memberDto) {
+    public Long signUp(SignUpDTO memberDto) {
         // 비밀번호 암호화
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         if(memberRepository.existsByEmail(memberDto.getEmail()) || memberRepository.existsByStdntNum(memberDto.getStdntNum())) {
