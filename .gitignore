@@ -198,6 +198,7 @@ gradle-app.setting
 
 ### application.yml ###
 /src/main/resources/application.yml
+/src/main/resources/application-oauth.yml
 /src/test/resources/application.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij,windows

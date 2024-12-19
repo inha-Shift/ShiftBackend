@@ -1,11 +1,13 @@
 package com.inha.shift.sercurity;
 
+import com.inha.shift.sercurity.oauth.eventHandler.MyAuthenticationFailureHandler;
+import com.inha.shift.sercurity.oauth.eventHandler.MyAuthenticationSuccessHandler;
 import com.inha.shift.sercurity.jwt.JwtAuthenticationFilter;
 import com.inha.shift.sercurity.jwt.JwtAuthorizationFilter;
 import com.inha.shift.sercurity.jwt.JwtUtil;
+import com.inha.shift.sercurity.oauth.CustomOAuth2Service;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,9 +28,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+    private final CustomOAuth2Service oAuth2UserService;
+    private final MyAuthenticationSuccessHandler successHandler;
+    private final MyAuthenticationFailureHandler failureHandler;
     private final JwtUtil jwtUtil;
-
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -43,8 +46,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signIn", "/auth/signUp", "/auth/sendEmailConfirmNum", "/auth/confirmEmail").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/confirmAuth").permitAll()
                         .anyRequest().authenticated()
+                )
+                // OAuth2 로그인 설정
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(c -> c.userService(oAuth2UserService))
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
                 )
                 .exceptionHandling(exception ->
                         exception
@@ -70,6 +80,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 origin 추가
+        config.addAllowedOrigin("http://localhost:8080"); // 허용할 origin 추가
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
