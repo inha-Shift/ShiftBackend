@@ -29,15 +29,17 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
-    // oAuth 계정 로그인 성공한 이후 로직
+    // OAuth 계정 로그인 성공한 이후 로직
+    /**
+     * OAuth의 Access Token은 사용하지 않으므로 가져오지 않았음.
+     * OAuth의 Access Token은 외부 API 사용하는데 쓰임.
+     **/
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        // OAuth2User로 캐스팅하여 인증된 사용자 정보를 가져온다.
+        // 인증된 사용자 정보를 가져온다
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
-
-        // Provider가 누구인지 가져온다
         String provider = oAuth2User.getAttribute("provider");
 
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);

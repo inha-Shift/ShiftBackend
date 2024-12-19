@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/auth/confirmAuth").permitAll()
                         .anyRequest().authenticated()
                 )
+                // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(c -> c.userService(oAuth2UserService))
                         .successHandler(successHandler)
